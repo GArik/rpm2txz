@@ -59,6 +59,7 @@ cat $CWD/rpm2targz > $PKG/usr/bin/rpm2targz
 ) || exit 1
 
 ( cd $PKG/usr/bin ; ln -sf rpm2targz rpm2tgz )
+( cd $PKG/usr/bin ; ln -sf rpm2targz rpm2txz )
 chmod 755 $PKG/usr/bin/{rpmoffset,rpm2targz}
 mkdir -p $PKG/usr/doc/rpm2targz
 cp -a $CWD/rpm2targz.README $PKG/usr/doc/rpm2targz/rpm2targz.README

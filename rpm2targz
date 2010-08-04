@@ -23,6 +23,7 @@
 #
 
 CWD=$(pwd)
+NAME="$(basename $0)"
 
 # Breaking the help out into it's own deal
 usage() {
@@ -31,9 +32,13 @@ usage() {
   echo "            with \"installpkg\", \"removepkg\", \"pkgtool\", or manually"
   echo "            with \"tar\")"
   echo
-  if [ "$(basename $0)" = "rpm2tgz" ]; then
+  if [ "$NAME" = "rpm2tgz" -o "$NAME" = "rpm2txz" ]; then
     echo "Usage:      $0 [OPTION] <file.rpm>"
-    echo "            (Outputs \"file.tgz\")"
+    if [ "$NAME" = "rpm2tgz" ]; then
+      echo "            (Outputs \"file.tgz\")"
+    else
+      echo "            (Outputs \"file.txz\")"
+    fi
     echo
     echo "  -s    extract the install scripts to /usr/doc/\$PRGNAM-\$VERSION/"
     echo "          for review."
@@ -210,15 +215,20 @@ for i in $* ; do
   # If this program was called as "rpm2targz", then repack as a plain
   # tar+gz archive.  If it was called as "rpm2tgz", use Slackware's
   # makepkg to produce the .tgz:
-  if [ "$(basename $0)" = "rpm2tgz" ]; then
+  if [ "$NAME" = "rpm2tgz" -o "$NAME" = "rpm2txz" ]; then
+    if [ "$NAME" = "rpm2tgz" ]; then
+      EXT=tgz
+    else
+      EXT=txz
+    fi
     ( 
       if [ "$META_NAME" = "true" ]; then
         get_meta_data $i
         cd $TMPDIR
-        /sbin/makepkg -l y -c n $CWD/$PRGNAM-$VERSION-$ARCH-${BUILD}.tgz
+        /sbin/makepkg -l y -c n $CWD/$PRGNAM-$VERSION-$ARCH-${BUILD}.$EXT
       else
         cd $TMPDIR
-        /sbin/makepkg -l y -c n $CWD/$(basename $i .rpm).tgz
+        /sbin/makepkg -l y -c n $CWD/$(basename $i .rpm).$EXT
       fi
     )
   else
