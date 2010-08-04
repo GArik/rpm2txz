@@ -50,15 +50,12 @@ cat $CWD/rpm2targz > $PKG/usr/bin/rpm2targz
 
 # Apply some patches:
 ( cd $PKG/usr/bin
-  # These are all against "rpm2tgz", so mv it until we are done patching:
-  mv rpm2targz rpm2tgz
+  # These are all against "rpm2tgz", so we should point to the right file to patch explicitly
   # Not applied.  Rationale:  We do not want to alter the files in the RPM.
-  #zcat $CWD/patches/0005-gzip-man-info-pages.patch.gz | patch -p1 || exit 1
+  #zcat $CWD/patches/0005-gzip-man-info-pages.patch.gz | patch -p1 rpm2targz || exit 1
   # Not applied.  Rationale:  .tgz works with all versions of Slackware.
   # Translated RPMs may be targeting systems with no .txz support.
-  #zcat $CWD/patches/0006-should-we-use-.txz-format-in-slackware-current.patch.gz | patch -p1 || exit 1
-  # mv the script back:
-  mv rpm2tgz rpm2targz
+  #zcat $CWD/patches/0006-should-we-use-.txz-format-in-slackware-current.patch.gz | patch -p1 rpm2targz || exit 1
 ) || exit 1
 
 ( cd $PKG/usr/bin ; ln -sf rpm2targz rpm2tgz )
