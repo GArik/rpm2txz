@@ -202,9 +202,9 @@ for i in $* ; do
 
   # Save the rpm's summary and description as the slack-desc
   if [ "$DESC" = "true" ]; then
+    get_meta_data $i
     mkdir -p $TMPDIR/install
-    rpm -qp --qf %{SUMMARY} $i | sed -l 70 -r "s/^(.*)/$PRGNAM: $PRGNAM - \1\n/" > $TMPDIR/install/slack-desc
-    rpm -qp --qf %{DESCRIPTION} $i | sed -l 70 -r "s/^/$PRGNAM: /" >> $TMPDIR/install/slack-desc
+    rpm -qp --qf '%{NAME} (%{SUMMARY})\n\n%{DESCRIPTION}\n\n  %{URL}\n' $i | head -n 11 | sed -r "s/^/$PRGNAM: /" > $TMPDIR/install/slack-desc
   fi
 
   # If this program was called as "rpm2targz", then repack as a plain
@@ -212,12 +212,13 @@ for i in $* ; do
   # makepkg to produce the .tgz:
   if [ "$(basename $0)" = "rpm2tgz" ]; then
     ( 
-      cd $TMPDIR
       if [ "$META_NAME" = "true" ]; then
-        get_meta_data $CWD/$i
-        makepkg -l y -c n $CWD/$PRGNAM-$VERSION-$ARCH-${BUILD}.tgz
+        get_meta_data $i
+        cd $TMPDIR
+        /sbin/makepkg -l y -c n $CWD/$PRGNAM-$VERSION-$ARCH-${BUILD}.tgz
       else
-        makepkg -l y -c n $CWD/$(basename $i .rpm).tgz
+        cd $TMPDIR
+        /sbin/makepkg -l y -c n $CWD/$(basename $i .rpm).tgz
       fi
     )
   else

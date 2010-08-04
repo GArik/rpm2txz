@@ -52,10 +52,6 @@ cat $CWD/rpm2targz > $PKG/usr/bin/rpm2targz
 ( cd $PKG/usr/bin
   # These are all against "rpm2tgz", so mv it until we are done patching:
   mv rpm2targz rpm2tgz
-  zcat $CWD/patches/0001-fix-d-handling.patch.gz | patch -p1 || exit 1
-  zcat $CWD/patches/0002-fix-spurious-path-to-rpm-file-with-n-option.patch.gz | patch -p1 || exit 1
-  zcat $CWD/patches/0003-allow-every-user-to-use-rpm2tgz.patch.gz | patch -p1 || exit 1
-  zcat $CWD/patches/0004-produce-more-compliant-slack-desc.patch.gz | patch -p1 || exit 1
   # Not applied.  Rationale:  We do not want to alter the files in the RPM.
   #zcat $CWD/patches/0005-gzip-man-info-pages.patch.gz | patch -p1 || exit 1
   # Not applied.  Rationale:  .tgz works with all versions of Slackware.
