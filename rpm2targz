@@ -209,7 +209,18 @@ for i in $* ; do
   if [ "$DESC" = "true" ]; then
     get_meta_data $i
     mkdir -p $TMPDIR/install
-    rpm -qp --qf '%{NAME} (%{SUMMARY})\n\n%{DESCRIPTION}\n\n  %{URL}\n' $i | head -n 11 | sed -r "s/^/$PRGNAM: /" > $TMPDIR/install/slack-desc
+    if [ "$(rpm -qp --qf %{SUMMARY} $i )" != '(none)' ] ; then
+      rpm -qp --qf "$PRGNAM (%{SUMMARY})\n\n" $i > $TMPDIR/install/slack-desc
+    else
+      echo -en "$PRGNAM\n\n" > $TMPDIR/install/slack-desc
+    fi
+    if [ "$(rpm -qp --qf %{DESCRIPTION} $i )" != '(none)' ] ; then
+      rpm -qp --qf "%{DESCRIPTION}\n\n" $i >> $TMPDIR/install/slack-desc
+    fi
+    if [ "$(rpm -qp --qf %{URL} $i )" != '(none)' ] ; then
+      rpm -qp --qf "  %{URL}\n" $i >> $TMPDIR/install/slack-desc
+    fi
+    sed -ri "s/^/$PRGNAM: /;11q" $TMPDIR/install/slack-desc
   fi
 
   # If this program was called as "rpm2targz", then repack as a plain
