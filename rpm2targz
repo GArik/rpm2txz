@@ -247,10 +247,10 @@ for i in $* ; do
       if [ "$META_NAME" = "true" ]; then
         get_meta_data $i
         cd $TMPDIR
-        /sbin/makepkg -l y -c $COPT $CWD/$PRGNAM-$VERSION-$ARCH-${BUILD}.$EXT
+        /sbin/makepkg -l y -c $COPT "$CWD/$PRGNAM-$VERSION-$ARCH-${BUILD}.$EXT"
       else
         cd $TMPDIR
-        /sbin/makepkg -l y -c $COPT $CWD/$(basename $i .rpm).$EXT
+        /sbin/makepkg -l y -c $COPT "$CWD/$(basename $i .rpm).$EXT"
       fi
     )
   else
